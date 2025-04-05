@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../services/api';
 import { toast } from 'react-toastify';
 import SeatLayout from './SeatLayout';
 import './Booking.css';
@@ -20,9 +20,7 @@ const BookingForm = () => {
                     return;
                 }
 
-                const response = await axios.get('http://localhost:5000/api/bookings/seats', {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+                const response = await api.get('/bookings/seats');
                 const available = response.data.filter(seat => !seat.isBooked).length;
                 setAvailableSeats(available);
             } catch (err) {
@@ -51,12 +49,9 @@ const BookingForm = () => {
                 return;
             }
 
-            const response = await axios.post(
-                'http://localhost:5000/api/bookings/book',
-                { numberOfSeats },
-                {
-                    headers: { Authorization: `Bearer ${token}` }
-                }
+            const response = await api.post(
+                '/bookings/book',
+                { numberOfSeats }
             );
 
             toast.success('Seats booked successfully!');

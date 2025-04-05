@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../../services/api';
 import { toast } from 'react-toastify';
 import './Booking.css';
 
@@ -19,16 +19,12 @@ const SeatLayout = () => {
                 }
 
                 // Fetch all seats
-                const seatsResponse = await axios.get('http://localhost:5000/api/bookings/seats', {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+                const seatsResponse = await api.get('/bookings/seats');
                 setSeats(seatsResponse.data);
 
                 try {
                     // Fetch user's bookings
-                    const bookingsResponse = await axios.get('http://localhost:5000/api/bookings/user', {
-                        headers: { Authorization: `Bearer ${token}` }
-                    });
+                    const bookingsResponse = await api.get('/bookings/user');
                     
                     // Extract seat IDs from user's bookings
                     const userSeatIds = bookingsResponse.data.reduce((acc, booking) => {

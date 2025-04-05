@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../services/api';
 import './Auth.css';
 
 const Register = () => {
@@ -31,7 +31,7 @@ const Register = () => {
 
         try {
             const { confirmPassword, ...registerData } = formData;
-            const res = await axios.post('http://localhost:5000/api/auth/register', registerData);
+            const res = await api.post('/auth/register', registerData);
             localStorage.setItem('token', res.data.token);
             localStorage.setItem('user', JSON.stringify(res.data.user));
             navigate('/dashboard');

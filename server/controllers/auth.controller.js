@@ -22,7 +22,7 @@ const Register = async (req, res) => {
 
     const token = jwt.sign(
       { id: newUser._id },
-      process.env.JWT_SECRET || "your-secret-key",
+      process.env.JWT_SECRET,
       { expiresIn: "24h" }
     );
 

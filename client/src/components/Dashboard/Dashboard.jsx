@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../services/api';
 import { toast } from 'react-toastify';
 import './Dashboard.css';
 
@@ -23,9 +23,7 @@ const Dashboard = () => {
                     return;
                 }
 
-                const response = await axios.get('http://localhost:5000/api/bookings/user', {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+                const response = await api.get('/bookings/user');
                 setBookings(response.data);
                 
                 // Calculate stats
@@ -56,19 +54,11 @@ const Dashboard = () => {
                 return;
             }
 
-            await axios.post(
-                `http://localhost:5000/api/bookings/cancel/${bookingId}`,
-                {},
-                {
-                    headers: { Authorization: `Bearer ${token}` }
-                }
-            );
+            await api.post(`/bookings/cancel/${bookingId}`, {});
 
             toast.success('Booking cancelled successfully');
             // Refresh bookings
-            const response = await axios.get('http://localhost:5000/api/bookings/user', {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const response = await api.get('/bookings/user');
             setBookings(response.data);
             
             // Update stats
