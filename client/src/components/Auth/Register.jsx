@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import api from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
 import './Auth.css';
 
 const Register = () => {
@@ -13,6 +13,7 @@ const Register = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const { register } = useAuth();
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -31,12 +32,14 @@ const Register = () => {
 
         try {
             const { confirmPassword, ...registerData } = formData;
-            const res = await api.post('/auth/register', registerData);
-            localStorage.setItem('token', res.data.token);
-            localStorage.setItem('user', JSON.stringify(res.data.user));
-            navigate('/dashboard');
+            const result = await register(registerData);
+            if (result.success) {
+                navigate('/dashboard');
+            } else {
+                setError(result.message);
+            }
         } catch (err) {
-            setError(err.response?.data?.message || 'An error occurred during registration');
+            setError('An error occurred during registration');
         } finally {
             setLoading(false);
         }

@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import './Navbar.css';
 
-const Navbar = ({ isAuthenticated, user, onLogout }) => {
+const Navbar = () => {
     const [menuOpen, setMenuOpen] = useState(false);
+    const { user, logout, isAuthenticated } = useAuth();
 
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
@@ -11,6 +13,11 @@ const Navbar = ({ isAuthenticated, user, onLogout }) => {
 
     const closeMenu = () => {
         setMenuOpen(false);
+    };
+
+    const handleLogout = () => {
+        logout();
+        closeMenu();
     };
 
     return (
@@ -30,12 +37,12 @@ const Navbar = ({ isAuthenticated, user, onLogout }) => {
             </button>
 
             <div className={`nav-links ${menuOpen ? 'open' : ''}`}>
-                {isAuthenticated ? (
+                {isAuthenticated() ? (
                     <>
                         <span>Welcome, {user?.username}</span>
                         <Link to="/dashboard" onClick={closeMenu}>Dashboard</Link>
                         <Link to="/booking" onClick={closeMenu}>Book Seats</Link>
-                        <button onClick={() => { onLogout(); closeMenu(); }}>Logout</button>
+                        <button onClick={handleLogout}>Logout</button>
                     </>
                 ) : (
                     <>
